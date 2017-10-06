@@ -360,6 +360,14 @@ prv_notify_escape(prv_state_t *s, char *buf, size_t n)
         }
     }
 
+    /* input:abc\
+     * output:"abc\\"
+     */
+    if (n > 0 && buf[n-1] == '\\') {
+        if (fprintf(s->out, "\\") < 0)
+            return -1;
+    }
+
     return 0;
 }
 

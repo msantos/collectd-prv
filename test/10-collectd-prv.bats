@@ -73,6 +73,27 @@ EOF
     [ "$output" == "$result" ]
 }
 
+@test "trailing backslash" {
+    run sh -c "echo 'abc\\' | collectd-prv --hostname=test | sed 's/time=[0-9]* //'"
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+
+    [ "$status" -eq "0" ]
+
+    result='PUTNOTIF host=test severity=okay plugin=stdout type=prv message="abc\\"'
+
+    cat << EOF
+--- expected
+$result
+--- expected
+EOF
+    [ "$output" == "$result" ]
+}
+
+
 @test "discard limit" {
     run sh -c "yes \"$MSG\" | head -10 | collectd-prv --limit=3 --window=10 --hostname=test | sed 's/time=[0-9]* //'"
     cat << EOF
