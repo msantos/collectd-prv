@@ -100,6 +100,8 @@ main(int argc, char *argv[])
 
     s = prv_calloc(1, sizeof(prv_state_t));
 
+    s->window = 1;
+
     s->maxid = 99;
     s->maxlen = 255 - 10; ; /* @99:99:99@ */
 
@@ -126,10 +128,14 @@ main(int argc, char *argv[])
                 break;
             case 'd':
             case 'l':
-                s->limit = atoi(optarg);
+                s->limit = strtonum(optarg, 0, 0xffff, NULL);
+                if (errno)
+                    err(EXIT_FAILURE, "strtonum");
                 break;
             case 'w':
-                s->window = atoi(optarg);
+                s->window = strtonum(optarg, 1, 0xffff, NULL);
+                if (errno)
+                    err(EXIT_FAILURE, "strtonum");
                 break;
             case 'W':
                 if (strcmp(optarg, "block") == 0)
@@ -149,10 +155,14 @@ main(int argc, char *argv[])
                         optarg);
                 break;
             case 'I':
-                s->maxid = atoi(optarg);
+                s->maxid = strtonum(optarg, 0, 0xffff, NULL);
+                if (errno)
+                    err(EXIT_FAILURE, "strtonum");
                 break;
             case 'M':
-                s->maxlen = atoi(optarg);
+                s->maxlen = strtonum(optarg, 0, 0xffff, NULL);
+                if (errno)
+                    err(EXIT_FAILURE, "strtonum");
                 break;
             case 'v':
                 s->verbose += 1;
@@ -165,9 +175,6 @@ main(int argc, char *argv[])
 
     argc -= optind;
     argv += optind;
-
-    if (s->window <= 0)
-        s->window = 1;
 
     if ( (s->hostname[0] == '\0')
             && (gethostname(s->hostname, sizeof(s->hostname)-1) < 0))

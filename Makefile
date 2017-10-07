@@ -2,6 +2,7 @@
 
 PROG=   collectd-prv
 SRCS=   collectd-prv.c \
+        strtonum.c \
         sandbox_null.c \
         sandbox_rlimit.c \
         sandbox_seccomp.c
@@ -13,11 +14,13 @@ ifeq ($(UNAME_SYS), Linux)
               -fno-strict-aliasing
 	PRV_SANDBOX ?= seccomp
 else ifeq ($(UNAME_SYS), OpenBSD)
-    CFLAGS ?= -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
+    CFLAGS ?= -DHAVE_STRTONUM \
+              -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
               --param=ssp-buffer-size=4 -Wformat -Werror=format-security \
               -fno-strict-aliasing
 else ifeq ($(UNAME_SYS), FreeBSD)
-    CFLAGS ?= -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
+    CFLAGS ?= -DHAVE_STRTONUM \
+              -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
               --param=ssp-buffer-size=4 -Wformat -Werror=format-security \
               -fno-strict-aliasing
 endif

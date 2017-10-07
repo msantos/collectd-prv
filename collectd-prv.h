@@ -16,3 +16,8 @@
 
 int prv_sandbox_init();
 int prv_sandbox_stdin();
+
+#ifndef HAVE_STRTONUM
+long long strtonum(const char *numstr, long long minval, long long maxval,
+        const char **errstrp);
+#endif
