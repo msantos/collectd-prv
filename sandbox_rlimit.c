@@ -21,10 +21,7 @@ prv_sandbox_init()
 {
     struct rlimit rl_zero = {0};
 
-    if (setrlimit(RLIMIT_NPROC, &rl_zero) < 0)
-        return -1;
-
-    return 0;
+    return setrlimit(RLIMIT_NPROC, &rl_zero);
 }
 
     int
@@ -32,9 +29,6 @@ prv_sandbox_stdin()
 {
     struct rlimit rl_zero = {0};
 
-    if (setrlimit(RLIMIT_NOFILE, &rl_zero) < 0)
-        return -1;
-
-	return 0;
+    return setrlimit(RLIMIT_NOFILE, &rl_zero);
 }
 #endif
