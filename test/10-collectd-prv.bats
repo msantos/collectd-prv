@@ -258,7 +258,7 @@ EOF
 }
 
 @test "window: number of messages per window" {
-    run sh -c "timeout -s 9 3 yes \"$MSG\" | collectd-prv --limit=1 --window=1 --hostname=test | wc -l"
+    run sh -c "(timeout -s 9 3 yes \"$MSG\" | collectd-prv --limit=1 --window=1 --hostname=test) 2>&1 | grep -cv Killed"
     cat << EOF
 --- output
 $output
@@ -273,5 +273,5 @@ EOF
 $result
 --- expected
 EOF
-    [ "${lines[1]}" -eq "$result" ]
+    [ "$output" -eq "$result" ]
 }
