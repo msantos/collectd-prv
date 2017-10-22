@@ -29,6 +29,12 @@
 
 #include "collectd-prv.h"
 
+#ifdef CLOCK_MONOTONIC_COARSE
+#define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC_COARSE
+#else
+#define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
+#endif
+
 #define PRV_VERSION "0.4.1"
 
 #define DATA_MAX_LEN 64
@@ -186,8 +192,8 @@ main(int argc, char *argv[])
     if (s->type[0] == '\0')
         (void)memcpy(s->type, "prv", 3);
 
-    if (clock_gettime(CLOCK_MONOTONIC_COARSE, &(s->t0)) < 0)
-        err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC_COARSE)");
+    if (clock_gettime(PRV_CLOCK_MONOTONIC, &(s->t0)) < 0)
+        err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC)");
 
     if (prv_sandbox_stdin() < 0)
         err(3, "sandbox_stdin");
@@ -239,8 +245,8 @@ prv_output(prv_state_t *s, char *buf, size_t buflen)
     size_t n;
     ssize_t rem;
 
-    if (clock_gettime(CLOCK_MONOTONIC_COARSE, &t1) < 0)
-        err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC_COARSE)");
+    if (clock_gettime(PRV_CLOCK_MONOTONIC, &t1) < 0)
+        err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC)");
 
     sec = t1.tv_sec - s->t0.tv_sec;
 
