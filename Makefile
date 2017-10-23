@@ -5,7 +5,8 @@ SRCS=   collectd-prv.c \
         strtonum.c \
         sandbox_null.c \
         sandbox_rlimit.c \
-        sandbox_seccomp.c
+        sandbox_seccomp.c \
+        sandbox_pledge.c
 
 UNAME_SYS := $(shell uname -s)
 ifeq ($(UNAME_SYS), Linux)
@@ -18,6 +19,7 @@ else ifeq ($(UNAME_SYS), OpenBSD)
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
               --param=ssp-buffer-size=4 -Wformat -Werror=format-security \
               -fno-strict-aliasing
+	PRV_SANDBOX ?= pledge
 else ifeq ($(UNAME_SYS), FreeBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
