@@ -26,6 +26,7 @@ else ifeq ($(UNAME_SYS), FreeBSD)
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
               --param=ssp-buffer-size=4 -Wformat -Werror=format-security \
               -fno-strict-aliasing
+	PRV_SANDBOX ?= capsicum
 endif
 
 RM ?= rm
