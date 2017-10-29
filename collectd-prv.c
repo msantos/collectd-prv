@@ -329,7 +329,7 @@ prv_output(prv_state_t *s, char *buf, size_t buflen)
 prv_notify(prv_state_t *s, time_t t, int offset, size_t total, char *buf, size_t n)
 {
     if (fprintf(s->out,
-            "PUTNOTIF host=%s severity=okay time=%ld plugin=%s type=%s message=\"",
+            "PUTNOTIF host=%s severity=okay time=%zd plugin=%s type=%s message=\"",
             s->hostname,
             t,
             s->plugin,
