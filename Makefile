@@ -37,7 +37,7 @@ PRV_CFLAGS ?= -g -Wall
 CFLAGS += $(PRV_CFLAGS) \
 		  -DPRV_SANDBOX=\"$(PRV_SANDBOX)\" -DPRV_SANDBOX_$(PRV_SANDBOX)
 
-LDFLAGS += $(PRV_LDFLAGS)
+LDFLAGS += $(PRV_LDFLAGS) -Wl,-z,relro,-z,now
 
 all: $(PROG)
 
