@@ -13,7 +13,7 @@ UNAME_SYS := $(shell uname -s)
 ifeq ($(UNAME_SYS), Linux)
     CFLAGS ?= -D_FORTIFY_SOURCE=2 -O2 -fstack-protector \
               --param=ssp-buffer-size=4 -Wformat -Werror=format-security \
-              -fno-strict-aliasing -fwrapv
+              -fno-strict-aliasing
 	PRV_SANDBOX ?= seccomp
 else ifeq ($(UNAME_SYS), OpenBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
@@ -32,7 +32,7 @@ endif
 RM ?= rm
 
 PRV_SANDBOX ?= rlimit
-PRV_CFLAGS ?= -g -Wall
+PRV_CFLAGS ?= -g -Wall -fwrapv
 
 CFLAGS += $(PRV_CFLAGS) \
 		  -DPRV_SANDBOX=\"$(PRV_SANDBOX)\" -DPRV_SANDBOX_$(PRV_SANDBOX)
