@@ -14,7 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#if defined(__FreeBSD__)
 #define _WITH_GETLINE
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

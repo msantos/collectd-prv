@@ -58,8 +58,8 @@ prv_sandbox_stdin()
         if (fcntl(fd, F_GETFD, 0) < 0)
             continue;
 
-		if (cap_rights_limit(fd, &policy_read) < 0)
-			return -1;
+        if (cap_rights_limit(fd, &policy_read) < 0)
+            return -1;
     }
 
     return cap_enter();
