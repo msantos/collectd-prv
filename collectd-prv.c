@@ -39,7 +39,7 @@
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #endif
 
-#define PRV_VERSION "0.4.1"
+#define PRV_VERSION "0.4.2"
 
 #define DATA_MAX_LEN 64
 
