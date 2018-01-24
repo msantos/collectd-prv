@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Michael Santos <michael.santos@gmail.com>
+ * Copyright (c) 2017-2018, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -407,6 +407,7 @@ usage()
             "Pressure relief valve, version: %s (using %s sandbox)\n\n"
             "-s, --service <plugin>/<type>\n"
             "                          collectd service\n"
+            "-h, --hostname <name>     system hostname\n"
             "-l, --limit               message rate limit\n"
             "-w, --window              message rate window\n"
             "-W, --write-error <exit|drop|block>\n"
