@@ -383,10 +383,7 @@ prv_sandbox_init()
     if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) < 0)
         return -1;
 
-    if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog) < 0)
-        return -1;
-
-    return 0;
+    return prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog);
 }
 
     int
@@ -643,9 +640,6 @@ prv_sandbox_stdin()
         .filter = filter,
     };
 
-    if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog) < 0)
-        return -1;
-
-    return 0;
+    return prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog);
 }
 #endif
