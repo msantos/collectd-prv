@@ -370,6 +370,9 @@ prv_sandbox_init()
 #ifdef __NR_getfsstat
     SC_ALLOW(getfsstat),
 #endif
+#ifdef __NR_restart_syscall
+        SC_ALLOW(restart_syscall),
+#endif
 
         /* Default deny */
         BPF_STMT(BPF_RET+BPF_K, SECCOMP_FILTER_FAIL)
