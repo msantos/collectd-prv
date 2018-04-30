@@ -14,19 +14,22 @@ ifeq ($(UNAME_SYS), Linux)
     CFLAGS ?= -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
               -Wformat -Werror=format-security \
               -fno-strict-aliasing
-	PRV_SANDBOX ?= seccomp
+    LDFLAGS ?= -Wl,-z,relro,-z,now
+    PRV_SANDBOX ?= seccomp
 else ifeq ($(UNAME_SYS), OpenBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
               -Wformat -Werror=format-security \
               -fno-strict-aliasing
-	PRV_SANDBOX ?= pledge
+    LDFLAGS ?= -Wl,-z,relro,-z,now
+    PRV_SANDBOX ?= pledge
 else ifeq ($(UNAME_SYS), FreeBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
               -Wformat -Werror=format-security \
               -fno-strict-aliasing
-	PRV_SANDBOX ?= capsicum
+    LDFLAGS ?= -Wl,-z,relro,-z,now
+    PRV_SANDBOX ?= capsicum
 endif
 
 RM ?= rm
@@ -37,7 +40,7 @@ PRV_CFLAGS ?= -g -Wall -fwrapv
 CFLAGS += $(PRV_CFLAGS) \
 		  -DPRV_SANDBOX=\"$(PRV_SANDBOX)\" -DPRV_SANDBOX_$(PRV_SANDBOX)
 
-LDFLAGS += $(PRV_LDFLAGS) -Wl,-z,relro,-z,now
+LDFLAGS += $(PRV_LDFLAGS)
 
 all: $(PROG)
 
