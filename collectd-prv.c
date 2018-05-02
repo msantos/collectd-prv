@@ -118,6 +118,9 @@ main(int argc, char *argv[])
     s->in = stdin;
     s->out = stdout;
 
+    if (setvbuf(s->out, NULL, _IOLBF, 0) < 0)
+      err(EXIT_FAILURE, "setvbuf");
+
     while ((ch = getopt_long(argc, argv, "C:d:l:hH:I:M:s:w:W:v",
                     long_options, NULL)) != -1) {
         switch (ch) {
@@ -351,9 +354,6 @@ prv_notify(prv_state_t *s, time_t t, int offset, size_t total, char *buf, size_t
         return -1;
 
     if (fprintf(s->out, "\"\n") < 0)
-        return -1;
-
-    if (fflush(s->out) < 0)
         return -1;
 
     return 0;
