@@ -50,8 +50,6 @@ enum {
 };
 
 typedef struct {
-    FILE *in;
-    FILE *out;
     int verbose;
     size_t limit;
     size_t count;
@@ -115,10 +113,7 @@ main(int argc, char *argv[])
     s->maxid = 99;
     s->maxlen = 255 - 10; ; /* @99:99:99@ */
 
-    s->in = stdin;
-    s->out = stdout;
-
-    if (setvbuf(s->out, NULL, _IOLBF, 0) < 0)
+    if (setvbuf(stdout, NULL, _IOLBF, 0) < 0)
       err(EXIT_FAILURE, "setvbuf");
 
     while ((ch = getopt_long(argc, argv, "C:d:l:hH:I:M:s:w:W:v",
@@ -222,7 +217,7 @@ prv_input(prv_state_t *s)
            && fcntl(fileno(stdout), F_SETFL, O_NONBLOCK) < 0)
        err(EXIT_FAILURE, "fcntl");
 
-    while ( (buflen = getline(&buf, &n, s->in)) != -1) {
+    while ( (buflen = getline(&buf, &n, stdin)) != -1) {
         status = prv_output(s, buf, buflen);
         if (status < 0) {
             switch (errno) {
@@ -334,7 +329,7 @@ prv_output(prv_state_t *s, char *buf, size_t buflen)
     static int
 prv_notify(prv_state_t *s, time_t t, int offset, size_t total, char *buf, size_t n)
 {
-    if (fprintf(s->out,
+    if (fprintf(stdout,
             "PUTNOTIF host=%s severity=okay time=%zd plugin=%s type=%s message=\"",
             s->hostname,
             (ssize_t)t,
@@ -343,7 +338,7 @@ prv_notify(prv_state_t *s, time_t t, int offset, size_t total, char *buf, size_t
         return -1;
 
     if (total > 1) {
-        if (fprintf(s->out, "@%zu:%d:%zu@",
+        if (fprintf(stdout, "@%zu:%d:%zu@",
                 s->frag,
                 offset,
                 total) < 0)
@@ -353,7 +348,7 @@ prv_notify(prv_state_t *s, time_t t, int offset, size_t total, char *buf, size_t
     if (prv_notify_escape(s, buf, n) < 0)
         return -1;
 
-    if (fprintf(s->out, "\"\n") < 0)
+    if (fprintf(stdout, "\"\n") < 0)
         return -1;
 
     return 0;
@@ -367,11 +362,11 @@ prv_notify_escape(prv_state_t *s, char *buf, size_t n)
     for (i = 0; i < n; i++) {
         switch (buf[i]) {
             case '"':
-                if (fprintf(s->out, "\\\"") < 0)
+                if (fprintf(stdout, "\\\"") < 0)
                     return -1;
                 break;
             default:
-                if (fprintf(s->out, "%c", buf[i]) < 0)
+                if (fprintf(stdout, "%c", buf[i]) < 0)
                     return -1;
                 break;
         }
@@ -381,7 +376,7 @@ prv_notify_escape(prv_state_t *s, char *buf, size_t n)
      * output:"abc\\"
      */
     if (n > 0 && buf[n-1] == '\\') {
-        if (fprintf(s->out, "\\") < 0)
+        if (fprintf(stdout, "\\") < 0)
             return -1;
     }
 
