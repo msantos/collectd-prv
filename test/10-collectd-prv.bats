@@ -10,7 +10,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=t12345678901234 severity=okay plugin=stdout type=prv message=\"$MSG\""
 
@@ -19,7 +19,7 @@ EOF
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "set plugin/type" {
@@ -30,7 +30,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=test severity=okay plugin=plugin1234567890 type=type1234567890 message=\"$MSG\""
 
@@ -39,7 +39,7 @@ EOF
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "invalid plugin/type" {
@@ -50,7 +50,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "1" ]
+    [ "$status" -eq 1 ]
 }
 
 @test "escape quotes" {
@@ -61,7 +61,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result='PUTNOTIF host=test severity=okay plugin=stdout type=prv message="\"\"\"\"\""'
 
@@ -70,7 +70,7 @@ EOF
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "trailing backslash" {
@@ -81,7 +81,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result='PUTNOTIF host=test severity=okay plugin=stdout type=prv message="abc\\"'
 
@@ -90,7 +90,7 @@ EOF
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 
@@ -102,7 +102,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"$MSG\"
 PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"$MSG\"
@@ -113,7 +113,7 @@ PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"$MSG\""
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "long line: message is fragmented" {
@@ -124,7 +124,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:1:14@123\"
 PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:2:14@456\"
@@ -146,7 +146,7 @@ PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:14:14@3\""
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "long line: fragments exceed discard limit" {
@@ -157,7 +157,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result=""
 
@@ -166,7 +166,7 @@ EOF
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "fragment: exact length" {
@@ -177,7 +177,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"$MSG\""
 
@@ -186,7 +186,7 @@ EOF
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "fragment: length off by 1" {
@@ -198,7 +198,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:1:2@${MSG:0:$MLEN}\"
 PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:2:2@${MSG:$MLEN}\""
@@ -208,7 +208,7 @@ PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:2:2@${MSG:$
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "fragment: length is multiple of fragment length" {
@@ -220,7 +220,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result="PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:1:3@123\"
 PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:2:3@456\"
@@ -231,7 +231,7 @@ PUTNOTIF host=test severity=okay plugin=stdout type=prv message=\"@1:3:3@789\""
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "fragment: id rollover" {
@@ -242,7 +242,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq "0" ]
+    [ "$status" -eq 0 ]
 
     result='PUTNOTIF host=test severity=okay plugin=stdout type=prv message="@99:1:2@a"
 PUTNOTIF host=test severity=okay plugin=stdout type=prv message="@99:2:2@b"
@@ -254,7 +254,7 @@ PUTNOTIF host=test severity=okay plugin=stdout type=prv message="@1:2:2@b"'
 $result
 --- expected
 EOF
-    [ "$output" == "$result" ]
+    [ "$output" = "$result" ]
 }
 
 @test "window: number of messages per window" {
