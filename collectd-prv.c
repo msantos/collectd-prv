@@ -181,9 +181,6 @@ main(int argc, char *argv[])
         }
     }
 
-    argc -= optind;
-    argv += optind;
-
     if ( (s->hostname[0] == '\0')
             && (gethostname(s->hostname, sizeof(s->hostname)-1) < 0))
             err(EXIT_FAILURE, "gethostname");
