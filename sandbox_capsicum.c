@@ -20,6 +20,8 @@
 #include <sys/resource.h>
 #include <sys/capability.h>
 
+#include <termios.h>
+
 #include <errno.h>
 
     int
@@ -37,10 +39,14 @@ prv_sandbox_stdin()
     cap_rights_t policy_read;
     cap_rights_t policy_write;
 
+    const unsigned long cmds[] = { TIOCGETA, TIOCGWINSZ };
+
     int fd = -1;
 
-    (void)cap_rights_init(&policy_read, CAP_READ, CAP_EVENT, CAP_FCNTL);
-    (void)cap_rights_init(&policy_write, CAP_WRITE, CAP_READ);
+    (void)cap_rights_init(&policy_read,
+            CAP_READ, CAP_EVENT, CAP_FCNTL, CAP_FSTAT);
+    (void)cap_rights_init(&policy_write,
+            CAP_WRITE, CAP_READ, CAP_FSTAT, CAP_IOCTL);
 
     if (cap_rights_limit(STDIN_FILENO, &policy_read) < 0)
         return -1;
@@ -48,7 +54,13 @@ prv_sandbox_stdin()
     if (cap_rights_limit(STDOUT_FILENO, &policy_write) < 0)
         return -1;
 
+    if (cap_ioctls_limit(STDOUT_FILENO, cmds, sizeof(cmds)) < 0)
+        return -1;
+
     if (cap_rights_limit(STDERR_FILENO, &policy_write) < 0)
+        return -1;
+
+    if (cap_ioctls_limit(STDERR_FILENO, cmds, sizeof(cmds)) < 0)
         return -1;
 
     if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
