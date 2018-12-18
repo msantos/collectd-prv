@@ -12,6 +12,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+#include "collectd-prv.h"
 #ifdef PRV_SANDBOX_capsicum
 #include <unistd.h>
 #include <sys/types.h>

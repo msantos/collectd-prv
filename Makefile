@@ -35,7 +35,7 @@ endif
 RM ?= rm
 
 PRV_SANDBOX ?= rlimit
-PRV_CFLAGS ?= -g -Wall -fwrapv
+PRV_CFLAGS ?= -g -Wall -fwrapv -pedantic
 
 CFLAGS += $(PRV_CFLAGS) \
 		  -DPRV_SANDBOX=\"$(PRV_SANDBOX)\" -DPRV_SANDBOX_$(PRV_SANDBOX)
