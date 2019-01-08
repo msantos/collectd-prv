@@ -13,22 +13,25 @@ UNAME_SYS := $(shell uname -s)
 ifeq ($(UNAME_SYS), Linux)
     CFLAGS ?= -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
               -Wformat -Werror=format-security \
+              -pie -fPIE \
               -fno-strict-aliasing
-    LDFLAGS ?= -Wl,-z,relro,-z,now
+    LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
     PRV_SANDBOX ?= seccomp
 else ifeq ($(UNAME_SYS), OpenBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
               -Wformat -Werror=format-security \
+              -pie -fPIE \
               -fno-strict-aliasing
-    LDFLAGS ?= -Wl,-z,relro,-z,now
+    LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
     PRV_SANDBOX ?= pledge
 else ifeq ($(UNAME_SYS), FreeBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
               -Wformat -Werror=format-security \
+              -pie -fPIE \
               -fno-strict-aliasing
-    LDFLAGS ?= -Wl,-z,relro,-z,now
+    LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
     PRV_SANDBOX ?= capsicum
 endif
 
