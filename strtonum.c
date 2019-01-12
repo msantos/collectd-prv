@@ -19,11 +19,11 @@
 
 /* OPENBSD ORIGINAL: lib/libc/stdlib/strtonum.c */
 
-#ifndef HAVE_STRTONUM
 #include <stdlib.h>
 #include <limits.h>
 #include <errno.h>
 
+#ifndef HAVE_STRTONUM
 #define INVALID 	1
 #define TOOSMALL 	2
 #define TOOLARGE 	3
