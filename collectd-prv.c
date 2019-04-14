@@ -70,7 +70,7 @@ static int prv_notify(prv_state_t *s, time_t t, int offset,
         size_t total, char *buf, size_t n);
 static int prv_notify_escape(prv_state_t *s, char *buf, size_t n);
 static void * prv_calloc(size_t nmemb, size_t size);
-static void usage();
+static void usage(void);
 
 extern char *__progname;
 
@@ -295,7 +295,7 @@ prv_output(prv_state_t *s, char *buf, size_t buflen)
             break;
 
         default: {
-            int i;
+            size_t i;
 
             s->frag = (s->frag % s->maxid) + 1;
 
