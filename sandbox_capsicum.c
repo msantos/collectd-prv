@@ -14,55 +14,51 @@
  */
 #include "collectd-prv.h"
 #ifdef PRV_SANDBOX_capsicum
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/param.h>
-#include <sys/time.h>
-#include <sys/resource.h>
 #include <sys/capability.h>
+#include <sys/param.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <errno.h>
 
-    int
-prv_sandbox_init()
-{
-    struct rlimit rl = {0};
+int prv_sandbox_init() {
+  struct rlimit rl = {0};
 
-    return setrlimit(RLIMIT_NPROC, &rl);
+  return setrlimit(RLIMIT_NPROC, &rl);
 }
 
-    int
-prv_sandbox_stdin()
-{
-    struct rlimit rl = {0};
-    cap_rights_t policy_read;
-    cap_rights_t policy_write;
+int prv_sandbox_stdin() {
+  struct rlimit rl = {0};
+  cap_rights_t policy_read;
+  cap_rights_t policy_write;
 
-    int fd = -1;
+  int fd = -1;
 
-    (void)cap_rights_init(&policy_read, CAP_READ, CAP_EVENT, CAP_FCNTL);
-    (void)cap_rights_init(&policy_write, CAP_WRITE, CAP_READ);
+  (void)cap_rights_init(&policy_read, CAP_READ, CAP_EVENT, CAP_FCNTL);
+  (void)cap_rights_init(&policy_write, CAP_WRITE, CAP_READ);
 
-    if (cap_rights_limit(STDIN_FILENO, &policy_read) < 0)
-        return -1;
+  if (cap_rights_limit(STDIN_FILENO, &policy_read) < 0)
+    return -1;
 
-    if (cap_rights_limit(STDOUT_FILENO, &policy_write) < 0)
-        return -1;
+  if (cap_rights_limit(STDOUT_FILENO, &policy_write) < 0)
+    return -1;
 
-    if (cap_rights_limit(STDERR_FILENO, &policy_write) < 0)
-        return -1;
+  if (cap_rights_limit(STDERR_FILENO, &policy_write) < 0)
+    return -1;
 
-    if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
-        return -1;
+  if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
+    return -1;
 
-    for (fd = STDERR_FILENO+1; fd < rl.rlim_cur; fd++) {
-        if (fcntl(fd, F_GETFD, 0) < 0)
-            continue;
+  for (fd = STDERR_FILENO + 1; fd < rl.rlim_cur; fd++) {
+    if (fcntl(fd, F_GETFD, 0) < 0)
+      continue;
 
-        if (cap_rights_limit(fd, &policy_read) < 0)
-            return -1;
-    }
+    if (cap_rights_limit(fd, &policy_read) < 0)
+      return -1;
+  }
 
-    return cap_enter();
+  return cap_enter();
 }
 #endif

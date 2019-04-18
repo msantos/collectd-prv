@@ -14,25 +14,21 @@
  */
 #include "collectd-prv.h"
 #ifdef PRV_SANDBOX_rlimit
-#include <sys/time.h>
 #include <sys/resource.h>
+#include <sys/time.h>
 
-    int
-prv_sandbox_init()
-{
-    struct rlimit rl_zero = {0};
+int prv_sandbox_init() {
+  struct rlimit rl_zero = {0};
 
-    return setrlimit(RLIMIT_NPROC, &rl_zero);
+  return setrlimit(RLIMIT_NPROC, &rl_zero);
 }
 
-    int
-prv_sandbox_stdin()
-{
-    struct rlimit rl_zero = {0};
+int prv_sandbox_stdin() {
+  struct rlimit rl_zero = {0};
 
-    if (setrlimit(RLIMIT_NOFILE, &rl_zero) < 0)
-      return -1;
+  if (setrlimit(RLIMIT_NOFILE, &rl_zero) < 0)
+    return -1;
 
-    return setrlimit(RLIMIT_FSIZE, &rl_zero);
+  return setrlimit(RLIMIT_FSIZE, &rl_zero);
 }
 #endif

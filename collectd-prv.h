@@ -19,5 +19,5 @@ int prv_sandbox_stdin(void);
 
 #ifndef HAVE_STRTONUM
 long long strtonum(const char *numstr, long long minval, long long maxval,
-        const char **errstrp);
+                   const char **errstrp);
 #endif

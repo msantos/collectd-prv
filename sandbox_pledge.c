@@ -16,15 +16,7 @@
 #ifdef PRV_SANDBOX_pledge
 #include <unistd.h>
 
-    int
-prv_sandbox_init()
-{
-    return pledge("stdio rpath", NULL);
-}
+int prv_sandbox_init() { return pledge("stdio rpath", NULL); }
 
-    int
-prv_sandbox_stdin()
-{
-    return pledge("stdio", NULL);
-}
+int prv_sandbox_stdin() { return pledge("stdio", NULL); }
 #endif

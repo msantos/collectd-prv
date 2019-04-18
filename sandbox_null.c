@@ -14,15 +14,7 @@
  */
 #include "collectd-prv.h"
 #ifdef PRV_SANDBOX_null
-    int
-prv_sandbox_init()
-{
-	return 0;
-}
+int prv_sandbox_init() { return 0; }
 
-    int
-prv_sandbox_stdin()
-{
-	return 0;
-}
+int prv_sandbox_stdin() { return 0; }
 #endif
