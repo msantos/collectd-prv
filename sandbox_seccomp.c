@@ -419,9 +419,6 @@ int prv_sandbox_stdin() {
       SC_ALLOW(fstat64),
 #endif
 
-#ifdef __NR_brk
-      SC_ALLOW(brk),
-#endif
 #ifdef __NR_clock_getres
       SC_ALLOW(clock_getres),
 #endif

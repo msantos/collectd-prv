@@ -41,6 +41,10 @@
 
 #define PRV_VERSION "0.4.2"
 
+#ifndef PRV_MAXBUF
+#define PRV_MAXBUF 8192
+#endif
+
 #define DATA_MAX_LEN 64
 
 enum { PRV_WR_BLOCK = 0, PRV_WR_DROP, PRV_WR_EXIT };
@@ -171,6 +175,10 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  if (s->write_error != PRV_WR_BLOCK &&
+      fcntl(fileno(stdout), F_SETFL, O_NONBLOCK) < 0)
+    err(EXIT_FAILURE, "fcntl");
+
   if ((s->hostname[0] == '\0') &&
       (gethostname(s->hostname, sizeof(s->hostname) - 1) < 0))
     err(EXIT_FAILURE, "gethostname");
@@ -193,17 +201,14 @@ int main(int argc, char *argv[]) {
 }
 
 static int prv_input(prv_state_t *s) {
-  char *buf = NULL;
-  size_t n = 0;
-  ssize_t buflen = 0;
+  char buf[PRV_MAXBUF] = {0};
   int status = 0;
 
-  if (s->write_error != PRV_WR_BLOCK &&
-      fcntl(fileno(stdout), F_SETFL, O_NONBLOCK) < 0)
-    err(EXIT_FAILURE, "fcntl");
+  for (;;) {
+    if (fgets(buf, sizeof(buf), stdin) == NULL)
+      break;
 
-  while ((buflen = getline(&buf, &n, stdin)) != -1) {
-    status = prv_output(s, buf, buflen);
+    status = prv_output(s, buf, strlen(buf));
     if (status < 0) {
       switch (errno) {
       case EAGAIN:
@@ -218,7 +223,6 @@ static int prv_input(prv_state_t *s) {
   }
 
 PRV_ERROR:
-  free(buf);
   return status;
 }
 
