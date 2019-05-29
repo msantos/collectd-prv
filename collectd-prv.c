@@ -108,8 +108,8 @@ int main(int argc, char *argv[]) {
   s->window = 1;
 
   s->maxid = 99;
+  /* @99:99:99@ */
   s->maxlen = 255 - 10;
-  ; /* @99:99:99@ */
 
   if (setvbuf(stdout, NULL, _IOLBF, 0) < 0)
     err(EXIT_FAILURE, "setvbuf");
