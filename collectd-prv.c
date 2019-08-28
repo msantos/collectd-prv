@@ -12,7 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
+ */
 
 #if defined(__FreeBSD__)
 #define _WITH_GETLINE
@@ -129,7 +129,9 @@ int main(int argc, char *argv[]) {
                      (int)MIN(p - optarg, DATA_MAX_LEN - 1), optarg);
       (void)snprintf(s->type, sizeof(s->type), "%.*s",
                      (int)MIN(strlen(p + 1), DATA_MAX_LEN - 1), p + 1);
-    } break;
+    }
+
+    break;
     case 'd':
     case 'l':
       s->limit = strtonum(optarg, 0, 0xffff, NULL);
@@ -305,7 +307,9 @@ static int prv_output(prv_state_t *s, char *buf, size_t buflen) {
 
       s->count++;
     }
-  } break;
+  }
+
+  break;
   }
 
   return n;
@@ -313,8 +317,9 @@ static int prv_output(prv_state_t *s, char *buf, size_t buflen) {
 
 static int prv_notify(prv_state_t *s, time_t t, int offset, size_t total,
                       char *buf, size_t n) {
-  if (fprintf(stdout, "PUTNOTIF host=%s severity=okay time=%lld plugin=%s "
-                      "type=%s message=\"",
+  if (fprintf(stdout,
+              "PUTNOTIF host=%s severity=okay time=%lld plugin=%s "
+              "type=%s message=\"",
               s->hostname, (long long)t, s->plugin, s->type) < 0)
     return -1;
 
