@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-int prv_sandbox_init(void);
-int prv_sandbox_stdin(void);
+int restrict_process_init(void);
+int restrict_process_stdin(void);
 
 #ifndef HAVE_STRTONUM
 long long strtonum(const char *numstr, long long minval, long long maxval,

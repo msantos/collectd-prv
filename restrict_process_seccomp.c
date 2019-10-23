@@ -13,7 +13,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include "collectd-prv.h"
-#ifdef PRV_SANDBOX_seccomp
+#ifdef RESTRICT_PROCESS_seccomp
 #include <errno.h>
 #include <stddef.h>
 #include <sys/prctl.h>
@@ -23,16 +23,16 @@
 #include <linux/filter.h>
 #include <linux/seccomp.h>
 
-/* macros from openssh-7.2/sandbox-seccomp-filter.c */
+/* macros from openssh-7.2/restrict_process-seccomp-filter.c */
 
-/* Linux seccomp_filter sandbox */
+/* Linux seccomp_filter restrict_process */
 #define SECCOMP_FILTER_FAIL SECCOMP_RET_KILL
 
 /* Use a signal handler to emit violations when debugging */
-#ifdef SANDBOX_SECCOMP_FILTER_DEBUG
+#ifdef RESTRICT_PROCESS_SECCOMP_FILTER_DEBUG
 #undef SECCOMP_FILTER_FAIL
 #define SECCOMP_FILTER_FAIL SECCOMP_RET_TRAP
-#endif /* SANDBOX_SECCOMP_FILTER_DEBUG */
+#endif /* RESTRICT_PROCESS_SECCOMP_FILTER_DEBUG */
 
 /* Simple helpers to avoid manual errors (but larger BPF programs). */
 #define SC_DENY(_nr, _errno)                                                   \
@@ -74,7 +74,7 @@
 #define SECCOMP_AUDIT_ARCH 0
 #endif
 
-int prv_sandbox_init() {
+int restrict_process_init() {
   struct sock_filter filter[] = {
       /* Ensure the syscall arch convention is as expected. */
       BPF_STMT(BPF_LD + BPF_W + BPF_ABS, offsetof(struct seccomp_data, arch)),
@@ -180,7 +180,7 @@ int prv_sandbox_init() {
   return prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog);
 }
 
-int prv_sandbox_stdin() {
+int restrict_process_stdin() {
   struct sock_filter filter[] = {
       /* Ensure the syscall arch convention is as expected. */
       BPF_STMT(BPF_LD + BPF_W + BPF_ABS, offsetof(struct seccomp_data, arch)),

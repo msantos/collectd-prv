@@ -3,11 +3,11 @@
 PROG=   collectd-prv
 SRCS=   collectd-prv.c \
         strtonum.c \
-        sandbox_null.c \
-        sandbox_rlimit.c \
-        sandbox_seccomp.c \
-        sandbox_pledge.c \
-        sandbox_capsicum.c
+        restrict_process_null.c \
+        restrict_process_rlimit.c \
+        restrict_process_seccomp.c \
+        restrict_process_pledge.c \
+        restrict_process_capsicum.c
 
 UNAME_SYS := $(shell uname -s)
 ifeq ($(UNAME_SYS), Linux)
@@ -16,7 +16,7 @@ ifeq ($(UNAME_SYS), Linux)
               -pie -fPIE \
               -fno-strict-aliasing
     LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
-    PRV_SANDBOX ?= seccomp
+    RESTRICT_PROCESS ?= seccomp
 else ifeq ($(UNAME_SYS), OpenBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
@@ -24,7 +24,7 @@ else ifeq ($(UNAME_SYS), OpenBSD)
               -pie -fPIE \
               -fno-strict-aliasing
     LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
-    PRV_SANDBOX ?= pledge
+    RESTRICT_PROCESS ?= pledge
 else ifeq ($(UNAME_SYS), FreeBSD)
     CFLAGS ?= -DHAVE_STRTONUM \
               -D_FORTIFY_SOURCE=2 -O2 -fstack-protector-strong \
@@ -32,17 +32,17 @@ else ifeq ($(UNAME_SYS), FreeBSD)
               -pie -fPIE \
               -fno-strict-aliasing
     LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
-    PRV_SANDBOX ?= capsicum
+    RESTRICT_PROCESS ?= capsicum
 endif
 
 RM ?= rm
 
-PRV_SANDBOX ?= rlimit
+RESTRICT_PROCESS ?= rlimit
 PRV_CFLAGS ?= -g -Wall -fwrapv -pedantic
 PRV_MAXBUF ?= 8192
 
 CFLAGS += $(PRV_CFLAGS) \
-		  -DPRV_SANDBOX=\"$(PRV_SANDBOX)\" -DPRV_SANDBOX_$(PRV_SANDBOX) \
+		  -DRESTRICT_PROCESS=\"$(RESTRICT_PROCESS)\" -DRESTRICT_PROCESS_$(RESTRICT_PROCESS) \
 			-DPRV_MAXBUF=$(PRV_MAXBUF)
 
 LDFLAGS += $(PRV_LDFLAGS)

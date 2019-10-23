@@ -13,8 +13,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include "collectd-prv.h"
-#ifdef PRV_SANDBOX_null
-int prv_sandbox_init() { return 0; }
+#ifdef RESTRICT_PROCESS_pledge
+#include <unistd.h>
 
-int prv_sandbox_stdin() { return 0; }
+int restrict_process_init() { return pledge("stdio rpath", NULL); }
+
+int restrict_process_stdin() { return pledge("stdio", NULL); }
 #endif

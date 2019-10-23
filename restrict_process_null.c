@@ -13,22 +13,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include "collectd-prv.h"
-#ifdef PRV_SANDBOX_rlimit
-#include <sys/resource.h>
-#include <sys/time.h>
+#ifdef RESTRICT_PROCESS_null
+int restrict_process_init() { return 0; }
 
-int prv_sandbox_init() {
-  struct rlimit rl_zero = {0};
-
-  return setrlimit(RLIMIT_NPROC, &rl_zero);
-}
-
-int prv_sandbox_stdin() {
-  struct rlimit rl_zero = {0};
-
-  if (setrlimit(RLIMIT_NOFILE, &rl_zero) < 0)
-    return -1;
-
-  return setrlimit(RLIMIT_FSIZE, &rl_zero);
-}
+int restrict_process_stdin() { return 0; }
 #endif

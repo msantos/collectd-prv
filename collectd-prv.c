@@ -100,8 +100,8 @@ int main(int argc, char *argv[]) {
   prv_state_t *s = NULL;
   int status = 0;
 
-  if (prv_sandbox_init() < 0)
-    err(3, "sandbox_init");
+  if (restrict_process_init() < 0)
+    err(3, "restrict_process_init");
 
   s = prv_calloc(1, sizeof(prv_state_t));
 
@@ -194,8 +194,8 @@ int main(int argc, char *argv[]) {
   if (clock_gettime(PRV_CLOCK_MONOTONIC, &(s->t0)) < 0)
     err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC)");
 
-  if (prv_sandbox_stdin() < 0)
-    err(3, "sandbox_stdin");
+  if (restrict_process_stdin() < 0)
+    err(3, "restrict_process_stdin");
 
   status = prv_input(s);
 
@@ -377,7 +377,7 @@ static void *prv_calloc(size_t nmemb, size_t size) {
 static void usage() {
   errx(EXIT_FAILURE,
        "[OPTION] <COMMAND> <...>\n"
-       "Pressure relief valve, version: %s (using %s sandbox)\n\n"
+       "Pressure relief valve, version: %s (using %s mode process restriction)\n\n"
        "-s, --service <plugin>/<type>\n"
        "                          collectd service\n"
        "-h, --hostname <name>     system hostname\n"
@@ -389,5 +389,5 @@ static void usage() {
        "-I, --max-event-id        max message fragment header id\n"
        "-v, --verbose             verbose mode\n"
        "-h, --help                help",
-       PRV_VERSION, PRV_SANDBOX);
+       PRV_VERSION, RESTRICT_PROCESS);
 }

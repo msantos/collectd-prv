@@ -13,7 +13,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include "collectd-prv.h"
-#ifdef PRV_SANDBOX_capsicum
+#ifdef RESTRICT_PROCESS_capsicum
 #include <sys/capability.h>
 #include <sys/param.h>
 #include <sys/resource.h>
@@ -23,13 +23,13 @@
 
 #include <errno.h>
 
-int prv_sandbox_init() {
+int restrict_process_init() {
   struct rlimit rl = {0};
 
   return setrlimit(RLIMIT_NPROC, &rl);
 }
 
-int prv_sandbox_stdin() {
+int restrict_process_stdin() {
   struct rlimit rl = {0};
   cap_rights_t policy_read;
   cap_rights_t policy_write;

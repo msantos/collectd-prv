@@ -40,10 +40,10 @@ Build
     # Recommended: build using musl
     CC="musl-gcc -static -Os" make clean all
 
-    # To select a different sandbox
-    PRV_SANDBOX=null
+    # select a different method for process restriction
+    RESTRICT_PROCESS=null
 
-    # musl: enabling the seccomp sandbox might require downloading a
+    # musl: enabling seccomp process restriction might require downloading a
     # copy of linux kernel headers
     PRV_INCLUDE=/tmp
 
