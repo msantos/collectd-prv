@@ -86,6 +86,9 @@ int restrict_process_init() {
 /* Syscalls to non-fatally deny */
 
 /* Syscalls to allow */
+#ifdef __NR_ioctl
+      SC_ALLOW(ioctl),
+#endif
 #ifdef __NR_prctl
       SC_ALLOW(prctl),
 #endif
@@ -164,6 +167,15 @@ int restrict_process_init() {
 
 #ifdef __NR_restart_syscall
       SC_ALLOW(restart_syscall),
+#endif
+
+#ifdef __TERMUX__
+#ifdef __NR_mprotect
+      SC_ALLOW(mprotect),
+#endif
+#ifdef __NR_munmap
+      SC_ALLOW(munmap),
+#endif
 #endif
 
       /* Default deny */
@@ -261,6 +273,15 @@ int restrict_process_stdin() {
 #endif
 #ifdef __NR_restart_syscall
       SC_ALLOW(restart_syscall),
+#endif
+
+#ifdef __TERMUX__
+#ifdef __NR_mprotect
+      SC_ALLOW(mprotect),
+#endif
+#ifdef __NR_munmap
+      SC_ALLOW(munmap),
+#endif
 #endif
 
       /* Default deny */
