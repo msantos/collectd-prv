@@ -73,6 +73,19 @@ EOF
     [ "$output" = "$result" ]
 }
 
+@test "escaped backslashes" {
+    run sh -c "echo '"\"\\"\"\"\\""' | collectd-prv --hostname=test | sed 's/time=[0-9]* //'"
+    result='PUTNOTIF host=test severity=okay plugin=stdout type=prv message="\"\\\"\"\\"'
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+
+    [ "$status" -eq 0 ]
+    [ "$output" = "$result" ]
+}
+
 @test "trailing backslash" {
     run sh -c "echo 'abc\\' | collectd-prv --hostname=test | sed 's/time=[0-9]* //'"
     cat << EOF

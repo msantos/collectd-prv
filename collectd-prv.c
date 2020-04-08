@@ -39,7 +39,7 @@
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #endif
 
-#define PRV_VERSION "0.4.2"
+#define PRV_VERSION "0.5.0"
 
 #ifndef PRV_MAXBUF
 #define PRV_MAXBUF 8192
@@ -346,19 +346,15 @@ static int prv_notify_escape(prv_state_t *s, char *buf, size_t n) {
       if (fprintf(stdout, "\\\"") < 0)
         return -1;
       break;
+    case '\\':
+      if (fprintf(stdout, "\\\\") < 0)
+        return -1;
+      break;
     default:
       if (fprintf(stdout, "%c", buf[i]) < 0)
         return -1;
       break;
     }
-  }
-
-  /* input:abc\
-   * output:"abc\\"
-   */
-  if (n > 0 && buf[n - 1] == '\\') {
-    if (fprintf(stdout, "\\") < 0)
-      return -1;
   }
 
   return 0;
