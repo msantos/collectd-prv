@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018, Michael Santos <michael.santos@gmail.com>
+ * Copyright (c) 2017-2020, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -98,7 +98,6 @@ static const struct option long_options[] = {
 int main(int argc, char *argv[]) {
   int ch = 0;
   prv_state_t *s = NULL;
-  int status = 0;
 
   if (restrict_process_init() < 0)
     err(3, "restrict_process_init");
@@ -197,35 +196,27 @@ int main(int argc, char *argv[]) {
   if (restrict_process_stdin() < 0)
     err(3, "restrict_process_stdin");
 
-  status = prv_input(s);
+  if (prv_input(s) < 0)
+    err(111, "prv_intput");
 
-  exit(status >= 0 ? 0 : 2);
+  exit(0);
 }
 
 static int prv_input(prv_state_t *s) {
   char buf[PRV_MAXBUF] = {0};
-  int status = 0;
 
-  for (;;) {
-    if (fgets(buf, sizeof(buf), stdin) == NULL)
-      break;
-
-    status = prv_output(s, buf, strlen(buf));
-    if (status < 0) {
-      switch (errno) {
-      case EAGAIN:
+  while (fgets(buf, sizeof(buf), stdin) != NULL) {
+    if (prv_output(s, buf, strlen(buf)) < 0) {
+      if (errno == EAGAIN) {
         VERBOSE(s, 1, "PIPE FULL:dropped:%s", buf);
-        if (s->write_error != PRV_WR_DROP)
-          goto PRV_ERROR;
-        break;
-      default:
-        goto PRV_ERROR;
+        if (s->write_error == PRV_WR_DROP)
+          continue;
       }
+      return -1;
     }
   }
 
-PRV_ERROR:
-  return status;
+  return 0;
 }
 
 static int prv_output(prv_state_t *s, char *buf, size_t buflen) {
@@ -373,7 +364,8 @@ static void *prv_calloc(size_t nmemb, size_t size) {
 static void usage() {
   errx(EXIT_FAILURE,
        "[OPTION] <COMMAND> <...>\n"
-       "Pressure relief valve, version: %s (using %s mode process restriction)\n\n"
+       "Pressure relief valve, version: %s (using %s mode process "
+       "restriction)\n\n"
        "-s, --service <plugin>/<type>\n"
        "                          collectd service\n"
        "-h, --hostname <name>     system hostname\n"
