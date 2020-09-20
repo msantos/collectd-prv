@@ -227,6 +227,9 @@ static int prv_output(prv_state_t *s, char *buf, size_t buflen) {
   size_t n;
   ssize_t rem;
 
+  if (buflen == 0)
+    return 0;
+
   if (clock_gettime(PRV_CLOCK_MONOTONIC, &t1) < 0)
     err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC)");
 
