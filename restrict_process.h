@@ -1,4 +1,5 @@
-/* Copyright (c) 2017, Michael Santos <michael.santos@gmail.com>
+/*
+ * Copyright (c) 2020, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,11 +13,5 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-#include "restrict_process.h"
-#ifdef RESTRICT_PROCESS_pledge
-#include <unistd.h>
-
-int restrict_process_init() { return pledge("stdio rpath", NULL); }
-
-int restrict_process_stdin() { return pledge("stdio", NULL); }
-#endif
+int restrict_process_init(void);
+int restrict_process_stdin(void);

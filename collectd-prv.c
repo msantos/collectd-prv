@@ -27,6 +27,7 @@
 #include <fcntl.h>
 
 #include "collectd-prv.h"
+#include "restrict_process.h"
 
 #ifdef CLOCK_MONOTONIC_COARSE
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC_COARSE
