@@ -37,24 +37,23 @@ Build
 
     make
 
-    # Recommended: build using musl
-    CC="musl-gcc -static -Os" make clean all
+    # Recommended: build a static executable using musl
+    ./musl-make clean all
 
     # select a different method for process restriction
     RESTRICT_PROCESS=null
 
     # musl: enabling seccomp process restriction might require downloading a
     # copy of linux kernel headers
-    PRV_INCLUDE=/tmp
+    MUSL_INCLUDE=/tmp
 
-    cd $PRV_INCLUDE
+    cd $MUSL_INCLUDE
     git clone https://github.com/sabotage-linux/kernel-headers.git
 
-    LDFLAGS="-I$PRV_INCLUDE/kernel-headers/generic/include -I$PRV_INCLUDE/kernel-headers/$(uname -m)/include" \
-             CC="musl-gcc -static -Os" make clean all
+    ./musl-make
 
-Sandboxing
-----------
+Process Restrictions
+--------------------
 
 Options
 -------
