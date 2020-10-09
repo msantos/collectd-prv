@@ -53,6 +53,26 @@ EOF
     [ "$status" -eq 1 ]
 }
 
+@test "invalid plugintype: size limits" {
+    run sh -c "echo \"$MSG\" | collectd-prv --service=plugin1234567890aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/foo"
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+
+    [ "$status" -eq 1 ]
+
+    run sh -c "echo \"$MSG\" | collectd-prv --service=foo/type1234567890aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+
+    [ "$status" -eq 1 ]
+}
+
 @test "escape quotes" {
     run sh -c "echo '\"\"\"\"\"' | collectd-prv --hostname=test | sed 's/time=[0-9]* //'"
     cat << EOF

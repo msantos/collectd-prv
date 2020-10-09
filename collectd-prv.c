@@ -115,16 +115,21 @@ int main(int argc, char *argv[]) {
     switch (ch) {
     case 's':
     case 'C': {
-      char *p = NULL;
+      char *p;
+      int rv;
 
       p = strchr(optarg, '/');
       if (p == NULL)
         errx(EXIT_FAILURE, "invalid format: <plugin>/<type>: %s", optarg);
 
-      (void)snprintf(s->plugin, sizeof(s->plugin), "%.*s",
-                     (int)MIN(p - optarg, DATA_MAX_LEN - 1), optarg);
-      (void)snprintf(s->type, sizeof(s->type), "%.*s",
-                     (int)MIN(strlen(p + 1), DATA_MAX_LEN - 1), p + 1);
+      *p++ = '\0';
+
+      rv = snprintf(s->plugin, sizeof(s->plugin), "%s", optarg);
+      if (rv < 0 || rv >= sizeof(s->plugin))
+        errx(EXIT_FAILURE, "invalid plugin: %s", optarg);
+      rv = snprintf(s->type, sizeof(s->type), "%s", p);
+      if (rv < 0 || rv >= sizeof(s->type))
+        errx(EXIT_FAILURE, "invalid type: %s", p);
     }
 
     break;
