@@ -93,8 +93,8 @@ static const struct option long_options[] = {
     {NULL, 0, NULL, 0}};
 
 int main(int argc, char *argv[]) {
-  int ch = 0;
-  prv_state_t *s = NULL;
+  int ch;
+  prv_state_t *s;
 
   if (restrict_process_init() < 0)
     err(3, "restrict_process_init");
@@ -205,7 +205,7 @@ int main(int argc, char *argv[]) {
 }
 
 static int prv_input(prv_state_t *s) {
-  char buf[PRV_MAXBUF] = {0};
+  char buf[PRV_MAXBUF];
 
   while (fgets(buf, sizeof(buf), stdin) != NULL) {
     if (prv_output(s, buf, strlen(buf)) < 0) {
@@ -222,9 +222,9 @@ static int prv_input(prv_state_t *s) {
 }
 
 static int prv_output(prv_state_t *s, char *buf, size_t buflen) {
-  struct timespec t1 = {0};
+  struct timespec t1;
   time_t t;
-  int sec = 0;
+  int sec;
   size_t chunks;
   size_t n;
   ssize_t rem;
@@ -357,7 +357,7 @@ static int prv_notify_escape(prv_state_t *s, char *buf, size_t n) {
 }
 
 static void *prv_calloc(size_t nmemb, size_t size) {
-  char *buf = NULL;
+  char *buf;
 
   buf = calloc(nmemb, size);
   if (buf == NULL)
