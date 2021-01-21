@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
         err(EXIT_FAILURE, "strtonum");
       break;
     case 'M':
-      s->maxlen = strtonum(optarg, 0, 0xffff, NULL);
+      s->maxlen = strtonum(optarg, 1, 0xffff, NULL);
       if (errno)
         err(EXIT_FAILURE, "strtonum");
       break;
