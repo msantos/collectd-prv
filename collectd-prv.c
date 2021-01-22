@@ -1,4 +1,4 @@
-/* Copyright (c) 2017-2020, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2017-2021, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -54,8 +54,8 @@ typedef struct {
   int window;
   struct timespec t0;
   char hostname[16];
-  char plugin[DATA_MAX_LEN];
-  char type[DATA_MAX_LEN];
+  char *plugin;
+  char *type;
   size_t maxlen;
   size_t maxid;
   int write_error;
@@ -95,6 +95,7 @@ static const struct option long_options[] = {
 int main(int argc, char *argv[]) {
   int ch;
   prv_state_t *s;
+  char *p;
 
   if (restrict_process_init() < 0)
     err(3, "restrict_process_init");
@@ -114,25 +115,22 @@ int main(int argc, char *argv[]) {
                            NULL)) != -1) {
     switch (ch) {
     case 's':
-    case 'C': {
-      char *p;
-      int rv;
-
+    case 'C':
       p = strchr(optarg, '/');
       if (p == NULL)
         errx(EXIT_FAILURE, "invalid format: <plugin>/<type>: %s", optarg);
 
       *p++ = '\0';
 
-      rv = snprintf(s->plugin, sizeof(s->plugin), "%s", optarg);
-      if (rv < 0 || rv >= sizeof(s->plugin))
-        errx(EXIT_FAILURE, "invalid plugin: %s", optarg);
-      rv = snprintf(s->type, sizeof(s->type), "%s", p);
-      if (rv < 0 || rv >= sizeof(s->type))
-        errx(EXIT_FAILURE, "invalid type: %s", p);
-    }
+      s->plugin = optarg;
+      s->type = p;
 
-    break;
+      if (strlen(s->plugin) >= DATA_MAX_LEN)
+        errx(EXIT_FAILURE, "invalid plugin: %s", s->plugin);
+
+      if (strlen(s->type) >= DATA_MAX_LEN)
+        errx(EXIT_FAILURE, "invalid type: %s", s->type);
+      break;
     case 'd':
     case 'l':
       s->limit = strtonum(optarg, 0, 0xffff, NULL);
@@ -186,11 +184,11 @@ int main(int argc, char *argv[]) {
       (gethostname(s->hostname, sizeof(s->hostname) - 1) < 0))
     err(EXIT_FAILURE, "gethostname");
 
-  if (s->plugin[0] == '\0')
-    (void)memcpy(s->plugin, "stdout", 6);
+  if (s->plugin == NULL)
+    s->plugin = "stdout";
 
-  if (s->type[0] == '\0')
-    (void)memcpy(s->type, "prv", 3);
+  if (s->type == NULL)
+    s->type = "prv";
 
   if (clock_gettime(PRV_CLOCK_MONOTONIC, &(s->t0)) < 0)
     err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC)");
