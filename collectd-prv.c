@@ -79,11 +79,9 @@ extern char *__progname;
   } while (0)
 
 static const struct option long_options[] = {
-    {"collectd", required_argument, NULL, 'C'},
     {"service", required_argument, NULL, 's'},
     {"hostname", required_argument, NULL, 'H'},
     {"limit", required_argument, NULL, 'l'},
-    {"discard", required_argument, NULL, 'd'},
     {"max-event-length", required_argument, NULL, 'M'},
     {"max-event-id", required_argument, NULL, 'I'},
     {"window", required_argument, NULL, 'w'},
@@ -111,11 +109,10 @@ int main(int argc, char *argv[]) {
   if (setvbuf(stdout, NULL, _IOLBF, 0) < 0)
     err(EXIT_FAILURE, "setvbuf");
 
-  while ((ch = getopt_long(argc, argv, "C:d:l:hH:I:M:s:w:W:v", long_options,
+  while ((ch = getopt_long(argc, argv, "l:hH:I:M:s:w:W:v", long_options,
                            NULL)) != -1) {
     switch (ch) {
     case 's':
-    case 'C':
       p = strchr(optarg, '/');
       if (p == NULL)
         errx(EXIT_FAILURE, "invalid format: <plugin>/<type>: %s", optarg);
@@ -131,7 +128,6 @@ int main(int argc, char *argv[]) {
       if (strlen(s->type) >= DATA_MAX_LEN)
         errx(EXIT_FAILURE, "invalid type: %s", s->type);
       break;
-    case 'd':
     case 'l':
       s->limit = strtonum(optarg, 0, 0xffff, NULL);
       if (errno)
