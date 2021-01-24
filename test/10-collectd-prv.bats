@@ -3,23 +3,14 @@
 MSG='1234567890abcdefghijklmnopqrstuvwxyz 123'
 
 @test "set long hostname" {
-    run sh -c "echo \"$MSG\" | collectd-prv --hostname=t123456789012345678901234abcddefg | sed 's/time=[0-9]* //'"
+    run sh -c "echo \"$MSG\" | collectd-prv --hostname=t123456789012345678901234abcddefg"
     cat << EOF
 --- output
 $output
 --- output
 EOF
 
-    [ "$status" -eq 0 ]
-
-    result="PUTNOTIF host=t12345678901234 severity=okay plugin=stdout type=prv message=\"$MSG\""
-
-    cat << EOF
---- expected
-$result
---- expected
-EOF
-    [ "$output" = "$result" ]
+    [ "$status" -eq 1 ]
 }
 
 @test "set plugin/type" {

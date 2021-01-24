@@ -61,6 +61,9 @@ Options
 -s, --service *plugin*/*type*
 :		collectd service (default: stdout/prv)
 
+-H, --hostname *name*
+:		collectd hostname (max: 16 bytes) (default: gethostname())
+
 -l, --limit *number*
 :		message rate limit (default: 0 (no limit))
 

@@ -43,6 +43,7 @@
 #endif
 
 #define DATA_MAX_LEN 64
+#define HOSTNAME_MAX_LEN 16
 
 enum { PRV_WR_BLOCK = 0, PRV_WR_DROP, PRV_WR_EXIT };
 
@@ -53,7 +54,7 @@ typedef struct {
   size_t frag;
   int window;
   struct timespec t0;
-  char hostname[16];
+  char *hostname;
   char *plugin;
   char *type;
   size_t maxlen;
@@ -150,8 +151,9 @@ int main(int argc, char *argv[]) {
 
       break;
     case 'H':
-      (void)snprintf(s->hostname, sizeof(s->hostname), "%.*s",
-                     (int)MIN(strlen(optarg), sizeof(s->hostname) - 1), optarg);
+      s->hostname = optarg;
+      if (strlen(s-> hostname) >= HOSTNAME_MAX_LEN)
+        errx(EXIT_FAILURE, "invalid hostname: %s", s->hostname);
       break;
     case 'I':
       s->maxid = strtonum(optarg, 0, 0xffff, NULL);
@@ -176,9 +178,11 @@ int main(int argc, char *argv[]) {
       fcntl(fileno(stdout), F_SETFL, O_NONBLOCK) < 0)
     err(EXIT_FAILURE, "fcntl");
 
-  if ((s->hostname[0] == '\0') &&
-      (gethostname(s->hostname, sizeof(s->hostname) - 1) < 0))
-    err(EXIT_FAILURE, "gethostname");
+  if (s->hostname == NULL) {
+    s->hostname = prv_calloc(HOSTNAME_MAX_LEN, 1);
+    if (gethostname(s->hostname, HOSTNAME_MAX_LEN - 1) < 0)
+      err(EXIT_FAILURE, "gethostname");
+  }
 
   if (s->plugin == NULL)
     s->plugin = "stdout";
