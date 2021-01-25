@@ -366,7 +366,7 @@ static void *prv_calloc(size_t nmemb, size_t size) {
 
 static void usage() {
   errx(EXIT_FAILURE,
-       "[OPTION] <COMMAND> <...>\n"
+       "[OPTION]\n"
        "Pressure relief valve, version: %s (using %s mode process "
        "restriction)\n\n"
        "-s, --service <plugin>/<type>\n"
