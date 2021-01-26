@@ -117,6 +117,25 @@ EOF
     [ "$output" = "$result" ]
 }
 
+@test "NUL prefaced message" {
+    run sh -c "/bin/echo -e '\x00test' | collectd-prv --hostname=test"
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+
+    [ "$status" -eq 0 ]
+
+    result=''
+
+    cat << EOF
+--- expected
+$result
+--- expected
+EOF
+    [ "$output" = "$result" ]
+}
 
 @test "discard limit" {
     run sh -c "yes \"$MSG\" | head -10 | collectd-prv --limit=3 --window=10 --hostname=test | sed 's/time=[0-9]* //'"
