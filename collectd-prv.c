@@ -36,7 +36,7 @@
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #endif
 
-#define PRV_VERSION "0.5.0"
+#define PRV_VERSION "0.6.0"
 
 #ifndef PRV_MAXBUF
 #define PRV_MAXBUF 8192
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
       break;
     case 'H':
       s->hostname = optarg;
-      if (strlen(s-> hostname) >= HOSTNAME_MAX_LEN)
+      if (strlen(s->hostname) >= HOSTNAME_MAX_LEN)
         errx(EXIT_FAILURE, "invalid hostname: %s", s->hostname);
       break;
     case 'I':
