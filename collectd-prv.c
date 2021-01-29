@@ -103,8 +103,8 @@ int main(int argc, char *argv[]) {
 
   s->window = 1;
 
-  s->maxid = 99;
   /* @99:99:99@ */
+  s->maxid = 99;
   s->maxlen = 255 - 10;
 
   if (setvbuf(stdout, NULL, _IOLBF, 0) < 0)
@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
         errx(EXIT_FAILURE, "invalid hostname: %s", s->hostname);
       break;
     case 'I':
-      s->maxid = strtonum(optarg, 0, 0xffff, NULL);
+      s->maxid = strtonum(optarg, 1, 0xffff, NULL);
       if (errno)
         err(EXIT_FAILURE, "strtonum");
       break;
