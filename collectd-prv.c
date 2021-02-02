@@ -36,7 +36,7 @@
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #endif
 
-#define PRV_VERSION "0.6.0"
+#define PRV_VERSION "0.6.2"
 
 #ifndef PRV_MAXBUF
 #define PRV_MAXBUF 8192
@@ -291,15 +291,11 @@ static int prv_output(prv_state_t *s, char *buf, size_t buflen) {
 
       if (prv_notify(s, t, i + 1, n, frag, fraglen) < 0)
         return -1;
-
-      s->count++;
     }
 
     if (rem > 0) {
       if (prv_notify(s, t, n, n, buf + (s->maxlen * (n - 1)), rem) < 0)
         return -1;
-
-      s->count++;
     }
   }
 
