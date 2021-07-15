@@ -67,7 +67,6 @@ static int prv_output(prv_state_t *s, char *buf, size_t buflen);
 static int prv_notify(prv_state_t *s, time_t t, int offset, size_t total,
                       char *buf, size_t n);
 static int prv_notify_escape(prv_state_t *s, char *buf, size_t n);
-static void *prv_calloc(size_t nmemb, size_t size);
 static void usage(void);
 
 extern char *__progname;
@@ -99,7 +98,9 @@ int main(int argc, char *argv[]) {
   if (restrict_process_init() < 0)
     err(3, "restrict_process_init");
 
-  s = prv_calloc(1, sizeof(prv_state_t));
+  s = calloc(1, sizeof(prv_state_t));
+  if (s == NULL)
+    err(EXIT_FAILURE, "calloc");
 
   s->window = 1;
 
@@ -179,7 +180,10 @@ int main(int argc, char *argv[]) {
     err(EXIT_FAILURE, "fcntl");
 
   if (s->hostname == NULL) {
-    s->hostname = prv_calloc(HOSTNAME_MAX_LEN, 1);
+    s->hostname = calloc(HOSTNAME_MAX_LEN, 1);
+    if (s == NULL)
+      err(EXIT_FAILURE, "calloc");
+
     if (gethostname(s->hostname, HOSTNAME_MAX_LEN - 1) < 0)
       err(EXIT_FAILURE, "gethostname");
   }
@@ -348,16 +352,6 @@ static int prv_notify_escape(prv_state_t *s, char *buf, size_t n) {
   }
 
   return 0;
-}
-
-static void *prv_calloc(size_t nmemb, size_t size) {
-  char *buf;
-
-  buf = calloc(nmemb, size);
-  if (buf == NULL)
-    err(EXIT_FAILURE, "calloc");
-
-  return buf;
 }
 
 static void usage() {
