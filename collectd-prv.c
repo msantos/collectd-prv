@@ -14,6 +14,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdnoreturn.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -67,7 +68,7 @@ static int prv_output(prv_state_t *s, char *buf, size_t buflen);
 static int prv_notify(prv_state_t *s, time_t t, int offset, size_t total,
                       char *buf, size_t n);
 static int prv_notify_escape(prv_state_t *s, char *buf, size_t n);
-static void usage(void);
+static noreturn void usage(void);
 
 extern char *__progname;
 
@@ -354,7 +355,7 @@ static int prv_notify_escape(prv_state_t *s, char *buf, size_t n) {
   return 0;
 }
 
-static void usage() {
+static noreturn void usage() {
   errx(EXIT_FAILURE,
        "[OPTION]\n"
        "Pressure relief valve, version: %s (using %s mode process "
