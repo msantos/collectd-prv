@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
   s->maxid = 99;
   s->maxlen = 255 - 10;
 
-  if (setvbuf(stdout, NULL, _IOLBF, 0) < 0)
+  if (setvbuf(stdout, NULL, _IONBF, 0) < 0)
     err(EXIT_FAILURE, "setvbuf");
 
   while ((ch = getopt_long(argc, argv, "l:hH:I:M:s:w:W:v", long_options,

@@ -86,9 +86,6 @@ int restrict_process_init() {
 /* Syscalls to non-fatally deny */
 
 /* Syscalls to allow */
-#ifdef __NR_ioctl
-      SC_ALLOW(ioctl),
-#endif
 #ifdef __NR_prctl
       SC_ALLOW(prctl),
 #endif
@@ -202,9 +199,6 @@ int restrict_process_stdin() {
       BPF_STMT(BPF_LD + BPF_W + BPF_ABS, offsetof(struct seccomp_data, nr)),
 
 /* Syscalls to non-fatally deny */
-#ifdef __NR_ioctl
-      SC_DENY(ioctl, ENOTTY),
-#endif
 #ifdef __NR__llseek
       SC_DENY(_llseek, ESPIPE),
 #endif
