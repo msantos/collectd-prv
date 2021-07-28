@@ -318,3 +318,13 @@ $result
 EOF
     [ "$output" -eq "$result" ]
 }
+
+@test "process restriction: ioctl: redirect stdout to a device" {
+    run script -e -a /dev/null -c "collectd-prv <<<$PATH >/dev/null"
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+    [ "$status" -eq 0 ]
+}

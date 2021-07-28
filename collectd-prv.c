@@ -37,7 +37,7 @@
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #endif
 
-#define PRV_VERSION "0.6.2"
+#define PRV_VERSION "0.6.3"
 
 #ifndef PRV_MAXBUF
 #define PRV_MAXBUF 8192
