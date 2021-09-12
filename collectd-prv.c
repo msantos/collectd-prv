@@ -95,6 +95,7 @@ int main(int argc, char *argv[]) {
   int ch;
   prv_state_t *s;
   char *p;
+  const char *errstr = NULL;
 
   if (restrict_process_init() < 0)
     err(3, "restrict_process_init");
@@ -132,14 +133,14 @@ int main(int argc, char *argv[]) {
         errx(EXIT_FAILURE, "invalid type: %s", s->type);
       break;
     case 'l':
-      s->limit = strtonum(optarg, 0, 0xffff, NULL);
-      if (errno)
-        err(EXIT_FAILURE, "strtonum");
+      s->limit = strtonum(optarg, 0, 0xffff, &errstr);
+      if (errstr != NULL)
+        errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'w':
-      s->window = strtonum(optarg, 1, 0xffff, NULL);
-      if (errno)
-        err(EXIT_FAILURE, "strtonum");
+      s->window = strtonum(optarg, 1, 0xffff, &errstr);
+      if (errstr != NULL)
+        errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'W':
       if (strcmp(optarg, "block") == 0)
@@ -158,14 +159,14 @@ int main(int argc, char *argv[]) {
         errx(EXIT_FAILURE, "invalid hostname: %s", s->hostname);
       break;
     case 'I':
-      s->maxid = strtonum(optarg, 1, 0xffff, NULL);
-      if (errno)
-        err(EXIT_FAILURE, "strtonum");
+      s->maxid = strtonum(optarg, 1, 0xffff, &errstr);
+      if (errstr != NULL)
+        errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'M':
-      s->maxlen = strtonum(optarg, 1, 0xffff, NULL);
-      if (errno)
-        err(EXIT_FAILURE, "strtonum");
+      s->maxlen = strtonum(optarg, 1, 0xffff, &errstr);
+      if (errstr != NULL)
+        errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'v':
       s->verbose += 1;
