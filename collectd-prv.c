@@ -1,4 +1,4 @@
-/* Copyright (c) 2017-2021, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2017-2022, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -37,7 +37,7 @@
 #define PRV_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #endif
 
-#define PRV_VERSION "0.6.3"
+#define PRV_VERSION "1.0.0"
 
 #ifndef PRV_MAXBUF
 #define PRV_MAXBUF 8192
@@ -55,7 +55,7 @@ typedef struct {
   size_t frag;
   int window;
   struct timespec t0;
-  char *hostname;
+  char hostname[HOSTNAME_MAX_LEN];
   char *plugin;
   char *type;
   size_t maxlen;
@@ -93,24 +93,20 @@ static const struct option long_options[] = {
 
 int main(int argc, char *argv[]) {
   int ch;
-  prv_state_t *s;
+  prv_state_t s = {0};
   char *p;
   const char *errstr = NULL;
 
   if (restrict_process_init() < 0)
     err(3, "restrict_process_init");
 
-  s = calloc(1, sizeof(prv_state_t));
-  if (s == NULL)
-    err(EXIT_FAILURE, "calloc");
-
-  s->window = 1;
+  s.window = 1;
 
   /* @99:99:99@ */
-  s->maxid = 99;
-  s->maxlen = 255 - 10;
+  s.maxid = 99;
+  s.maxlen = 255 - 10;
 
-  if (setvbuf(stdout, NULL, _IONBF, 0) < 0)
+  if (setvbuf(stdout, NULL, _IOLBF, 0) < 0)
     err(EXIT_FAILURE, "setvbuf");
 
   while ((ch = getopt_long(argc, argv, "l:hH:I:M:s:w:W:v", long_options,
@@ -123,53 +119,53 @@ int main(int argc, char *argv[]) {
 
       *p++ = '\0';
 
-      s->plugin = optarg;
-      s->type = p;
+      s.plugin = optarg;
+      s.type = p;
 
-      if (strlen(s->plugin) >= DATA_MAX_LEN)
-        errx(EXIT_FAILURE, "invalid plugin: %s", s->plugin);
+      if (strlen(s.plugin) >= DATA_MAX_LEN)
+        errx(EXIT_FAILURE, "invalid plugin: %s", s.plugin);
 
-      if (strlen(s->type) >= DATA_MAX_LEN)
-        errx(EXIT_FAILURE, "invalid type: %s", s->type);
+      if (strlen(s.type) >= DATA_MAX_LEN)
+        errx(EXIT_FAILURE, "invalid type: %s", s.type);
       break;
     case 'l':
-      s->limit = strtonum(optarg, 0, 0xffff, &errstr);
+      s.limit = strtonum(optarg, 0, 0xffff, &errstr);
       if (errstr != NULL)
         errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'w':
-      s->window = strtonum(optarg, 1, 0xffff, &errstr);
+      s.window = strtonum(optarg, 1, 0xffff, &errstr);
       if (errstr != NULL)
         errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'W':
       if (strcmp(optarg, "block") == 0)
-        s->write_error = PRV_WR_BLOCK;
+        s.write_error = PRV_WR_BLOCK;
       else if (strcmp(optarg, "drop") == 0)
-        s->write_error = PRV_WR_DROP;
+        s.write_error = PRV_WR_DROP;
       else if (strcmp(optarg, "exit") == 0)
-        s->write_error = PRV_WR_EXIT;
+        s.write_error = PRV_WR_EXIT;
       else
         errx(EXIT_FAILURE, "invalid option: %s: block|drop|exit", optarg);
 
       break;
     case 'H':
-      s->hostname = optarg;
-      if (strlen(s->hostname) >= HOSTNAME_MAX_LEN)
-        errx(EXIT_FAILURE, "invalid hostname: %s", s->hostname);
+      if (strlen(optarg) >= HOSTNAME_MAX_LEN)
+        errx(EXIT_FAILURE, "invalid hostname: %s", optarg);
+      (void)memcpy(s.hostname, optarg, strlen(optarg));
       break;
     case 'I':
-      s->maxid = strtonum(optarg, 1, 0xffff, &errstr);
+      s.maxid = strtonum(optarg, 1, 0xffff, &errstr);
       if (errstr != NULL)
         errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'M':
-      s->maxlen = strtonum(optarg, 1, 0xffff, &errstr);
+      s.maxlen = strtonum(optarg, 1, 0xffff, &errstr);
       if (errstr != NULL)
         errx(EXIT_FAILURE, "strtonum: %s", errstr);
       break;
     case 'v':
-      s->verbose += 1;
+      s.verbose += 1;
       break;
     case 'h':
     default:
@@ -177,32 +173,28 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (s->write_error != PRV_WR_BLOCK &&
+  if (s.write_error != PRV_WR_BLOCK &&
       fcntl(fileno(stdout), F_SETFL, O_NONBLOCK) < 0)
     err(EXIT_FAILURE, "fcntl");
 
-  if (s->hostname == NULL) {
-    s->hostname = calloc(HOSTNAME_MAX_LEN, 1);
-    if (s == NULL)
-      err(EXIT_FAILURE, "calloc");
-
-    if (gethostname(s->hostname, HOSTNAME_MAX_LEN - 1) < 0)
+  if (s.hostname[0] == '\0') {
+    if (gethostname(s.hostname, HOSTNAME_MAX_LEN - 1) < 0)
       err(EXIT_FAILURE, "gethostname");
   }
 
-  if (s->plugin == NULL)
-    s->plugin = "stdout";
+  if (s.plugin == NULL)
+    s.plugin = "stdout";
 
-  if (s->type == NULL)
-    s->type = "prv";
+  if (s.type == NULL)
+    s.type = "prv";
 
-  if (clock_gettime(PRV_CLOCK_MONOTONIC, &(s->t0)) < 0)
+  if (clock_gettime(PRV_CLOCK_MONOTONIC, &(s.t0)) < 0)
     err(EXIT_FAILURE, "clock_gettime(CLOCK_MONOTONIC)");
 
   if (restrict_process_stdin() < 0)
     err(3, "restrict_process_stdin");
 
-  if (prv_input(s) < 0)
+  if (prv_input(&s) < 0)
     err(111, "prv_intput");
 
   exit(0);

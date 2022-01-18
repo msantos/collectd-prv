@@ -1,4 +1,4 @@
-/* Copyright (c) 2017, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2017-2022, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -118,6 +118,9 @@ int restrict_process_init() {
 #ifdef __NR_fstat64
       SC_ALLOW(fstat64),
 #endif
+#ifdef __NR_ioctl
+      SC_ALLOW(ioctl),
+#endif
 
 #ifdef __NR_gettimeofday
       SC_ALLOW(gettimeofday),
@@ -211,6 +214,12 @@ int restrict_process_stdin() {
 #endif
 #ifdef __NR_fstat64
       SC_ALLOW(fstat64),
+#endif
+#ifdef __NR_brk
+      SC_ALLOW(brk),
+#endif
+#ifdef __NR_ioctl
+      SC_ALLOW(ioctl),
 #endif
 
 #ifdef __NR_clock_getres
