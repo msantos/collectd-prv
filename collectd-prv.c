@@ -355,7 +355,7 @@ static noreturn void usage() {
        "restriction)\n\n"
        "-s, --service <plugin>/<type>\n"
        "                          collectd service\n"
-       "-h, --hostname <name>     system hostname\n"
+       "-H, --hostname <name>     system hostname\n"
        "-l, --limit               message rate limit\n"
        "-w, --window              message rate window\n"
        "-W, --write-error <exit|drop|block>\n"
