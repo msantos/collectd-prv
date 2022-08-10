@@ -41,7 +41,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq 1 ]
+    [ "$status" -ne 0 ]
 }
 
 @test "invalid plugintype: size limits" {
@@ -278,7 +278,7 @@ EOF
 }
 
 @test "fragment: id rollover" {
-    run sh -c "yes 'ab' | collectd-prv --max-event-length=1 --hostname=test | sed 's/time=[0-9]* //' | head -200 | tail -4"
+    run sh -c "yes 'ab' | collectd-prv --max-event-length=1 --hostname=test 2>/dev/null | sed 's/time=[0-9]* //' | head -200 | tail -4"
     cat << EOF
 --- output
 $output
