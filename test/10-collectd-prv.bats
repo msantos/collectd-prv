@@ -52,7 +52,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq 1 ]
+    [ "$status" -ne 0 ]
 
     run sh -c "echo \"$MSG\" | collectd-prv --service=foo/type1234567890aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     cat << EOF
@@ -61,7 +61,7 @@ $output
 --- output
 EOF
 
-    [ "$status" -eq 1 ]
+    [ "$status" -ne 0 ]
 }
 
 @test "escape quotes" {
@@ -118,7 +118,7 @@ EOF
 }
 
 @test "NUL prefaced message" {
-    run sh -c "/bin/echo -e '\x00test' | collectd-prv --hostname=test"
+    run sh -c "printf '\0test' | collectd-prv --hostname=test"
     cat << EOF
 --- output
 $output

@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {
     err(3, "restrict_process_stdin");
 
   if (prv_input(&s) < 0)
-    err(111, "prv_intput");
+    err(111, "prv_input");
 
   exit(0);
 }

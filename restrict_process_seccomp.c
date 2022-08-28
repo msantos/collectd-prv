@@ -121,6 +121,9 @@ int restrict_process_init() {
 #ifdef __NR_fstat64
       SC_ALLOW(fstat64),
 #endif
+#ifdef __NR_newfstatat
+      SC_ALLOW(newfstatat),
+#endif
 #ifdef __NR_ioctl
       SC_ALLOW(ioctl),
 #endif
@@ -166,6 +169,10 @@ int restrict_process_init() {
 #endif
 #ifdef __NR_writev
       SC_ALLOW(writev),
+#endif
+
+#ifdef __NR_getrandom
+      SC_ALLOW(getrandom),
 #endif
 
 #ifdef __NR_restart_syscall
@@ -217,6 +224,9 @@ int restrict_process_stdin() {
 #endif
 #ifdef __NR_fstat64
       SC_ALLOW(fstat64),
+#endif
+#ifdef __NR_newfstatat
+      SC_ALLOW(newfstatat),
 #endif
 #ifdef __NR_brk
       SC_ALLOW(brk),
@@ -282,6 +292,10 @@ int restrict_process_stdin() {
 #endif
 #ifdef __NR_restart_syscall
       SC_ALLOW(restart_syscall),
+#endif
+
+#ifdef __NR_getrandom
+      SC_ALLOW(getrandom),
 #endif
 
 #ifdef __TERMUX__
