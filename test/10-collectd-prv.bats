@@ -330,6 +330,15 @@ $output
 EOF
     [ "$status" -eq 0 ]
     ;;
+    FreeBSD)
+    run script -e -a /dev/null collectd-prv <<<$PATH >/dev/null
+    cat << EOF
+--- output
+$output
+--- output
+EOF
+    [ "$status" -eq 0 ]
+    ;;
     *) skip ;;
     esac
 }
