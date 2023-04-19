@@ -22,12 +22,6 @@
 
 int restrict_process_init() {
   struct rlimit rl_zero = {0};
-
-  return setrlimit(RLIMIT_NPROC, &rl_zero);
-}
-
-int restrict_process_stdin() {
-  struct rlimit rl_zero = {0};
   struct stat sb = {0};
 
   if (fstat(STDOUT_FILENO, &sb) < 0)
@@ -37,6 +31,12 @@ int restrict_process_stdin() {
     if (setrlimit(RLIMIT_FSIZE, &rl_zero) < 0)
       return -1;
   }
+
+  return setrlimit(RLIMIT_NPROC, &rl_zero);
+}
+
+int restrict_process_stdin() {
+  struct rlimit rl_zero = {0};
 
   return setrlimit(RLIMIT_NOFILE, &rl_zero);
 }

@@ -33,14 +33,6 @@ static int fdlimit_range(int lowfd, cap_rights_t *policy);
 
 int restrict_process_init() {
   struct rlimit rl = {0};
-
-  return setrlimit(RLIMIT_NPROC, &rl);
-}
-
-int restrict_process_stdin() {
-  cap_rights_t policy_read;
-  cap_rights_t policy_write;
-  struct rlimit rl = {0};
   struct stat sb = {0};
 
   if (fstat(STDOUT_FILENO, &sb) < 0)
@@ -50,6 +42,13 @@ int restrict_process_stdin() {
     if (setrlimit(RLIMIT_FSIZE, &rl) < 0)
       return -1;
   }
+
+  return setrlimit(RLIMIT_NPROC, &rl);
+}
+
+int restrict_process_stdin() {
+  cap_rights_t policy_read;
+  cap_rights_t policy_write;
 
   (void)cap_rights_init(&policy_read, CAP_READ, CAP_EVENT);
   (void)cap_rights_init(&policy_write, CAP_WRITE, CAP_READ);
