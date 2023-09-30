@@ -42,11 +42,8 @@ RESTRICT_PROCESS=null
 
 # musl: enabling seccomp process restriction might require downloading a
 # copy of linux kernel headers
-MUSL_INCLUDE=/tmp
-
-cd $MUSL_INCLUDE
-git clone https://github.com/sabotage-linux/kernel-headers.git
-
+export MUSL_INCLUDE=/tmp
+git clone https://github.com/sabotage-linux/kernel-headers.git $MUSL_INCLUDE/kernel-headers
 ./musl-make
 ```
 
