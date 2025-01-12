@@ -1,4 +1,4 @@
-/* Copyright (c) 2017-2022, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2017-2025, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -348,7 +348,7 @@ static int prv_notify_escape(prv_state_t *s, char *buf, size_t n) {
   return 0;
 }
 
-static noreturn void usage() {
+static noreturn void usage(void) {
   errx(EXIT_FAILURE,
        "[OPTION]\n"
        "Pressure relief valve, version: %s (using %s mode process "
