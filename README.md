@@ -35,13 +35,14 @@ LoadPlugin exec
 make
 
 # Recommended: build a static executable using musl
+## sudo apt install musl-dev musl-tools
 ./musl-make clean all
 
 # select a different method for process restriction
-RESTRICT_PROCESS=null
+RESTRICT_PROCESS=null make clean all
 
-# musl: enabling seccomp process restriction might require downloading a
-# copy of linux kernel headers
+# musl: enabling seccomp process restriction requires downloading linux
+# kernel headers
 export MUSL_INCLUDE=/tmp
 git clone https://github.com/sabotage-linux/kernel-headers.git $MUSL_INCLUDE/kernel-headers
 ./musl-make
