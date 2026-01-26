@@ -7,9 +7,9 @@ optionally acting like a pressure relief valve during event floods.
 
 ## Example
 
-* script
+* collectd-tail
 
-```collectd-tail
+```bash
 #!/bin/bash
 
 set -o errexit
@@ -22,7 +22,9 @@ set -o pipefail
 tail -F $1 | collectd-prv --service="tail/syslog" --limit=30
 ```
 
-```collectd.conf
+* collectd.conf
+
+```bash
 LoadPlugin exec
 <Plugin exec>
   Exec "nobody:nobody" "collectd-tail" "/var/log/syslog"
@@ -31,7 +33,7 @@ LoadPlugin exec
 
 ## Build
 
-```
+```bash
 make
 
 # Recommended: build a static executable using musl
