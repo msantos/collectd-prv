@@ -50,8 +50,6 @@ git clone https://github.com/sabotage-linux/kernel-headers.git $MUSL_INCLUDE/ker
 ./musl-make
 ```
 
-## Process Restrictions
-
 ## Options
 
 -s, --service *plugin*/*type*
@@ -80,7 +78,3 @@ git clone https://github.com/sabotage-linux/kernel-headers.git $MUSL_INCLUDE/ker
 
 -h, --help
 :  help
-
-## Examples
-
-## TODO
